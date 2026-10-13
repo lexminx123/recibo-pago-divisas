@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voucher Recibo de Pago en Efectivo Divisas</title>
+<style>
+  @page {
+    size: letter;
+    margin: 15mm 20mm;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 25px;
+    color: #000;
+  }
+  .no-print {
+    text-align: center;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+  .btn {
+    background-color: #111;
+    color: #fff;
+    border: 1px solid #000;
+    padding: 9px 18px;
+    font-size: 13px;
+    font-family: Arial, sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+  }
+  .btn:hover {
+    background-color: #333;
+  }
+  .btn-outline {
+    background-color: #fff;
+    color: #111;
+  }
+  .btn-outline:hover {
+    background-color: #e9ecef;
+  }
+
+  /* Contenedor formal estilo talón / comprobante notarial sobrio */
+  .voucher-card {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    border: 2px solid #000;
+    padding: 22px 26px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+
+  /* Encabezado formal */
+  .header-table {
+    width: 100%;
+    border-bottom: 2px solid #000;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+  }
+  .header-title {
+    font-size: 13pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+  }
+  .header-sub {
+    font-size: 9.5pt;
+    font-weight: normal;
+    margin-top: 3px;
+  }
+  .voucher-folio {
+    text-align: right;
+    vertical-align: top;
+    font-size: 9pt;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+  }
+  .folio-box {
+    border: 1px solid #000;
+    padding: 4px 8px;
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 11pt;
+    letter-spacing: 1px;
+  }
+
+  /* Recuadro de Monto */
+  .amount-section {
+    border: 1.5px solid #000;
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    background-color: #fafafa;
+  }
+  .amount-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .amount-table td {
+    padding: 2px 4px;
+    vertical-align: middle;
+  }
+  .amount-words-title {
+    font-size: 8.5pt;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  .amount-words-val {
+    font-size: 11pt;
+    font-style: italic;
+    font-weight: bold;
+    margin-top: 2px;
+  }
+  .amount-num-box {
+    text-align: right;
+    font-family: Arial, sans-serif;
+    font-size: 17pt;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+
+  /* Intervinientes */
+  .parties-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+  }
+  .parties-table td {
+    width: 50%;
+    border: 1px solid #000;
+    padding: 8px 10px;
+    vertical-align: top;
+    font-size: 10pt;
+    line-height: 1.4;
+  }
+  .party-head {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 9.5pt;
+    border-bottom: 1px solid #000;
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+  }
+
+  /* Tabla de Detalles */
+  .details-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+    font-size: 9.5pt;
+  }
+  .details-table td {
+    border: 1px solid #000;
+    padding: 6px 8px;
+    vertical-align: top;
+  }
+  .label-cell {
+    width: 24%;
+    font-weight: bold;
+    background-color: #f2f2f2;
+  }
+
+  /* Texto legal condensado */
+  .legal-declaration {
+    border: 1px solid #000;
+    padding: 8px 10px;
+    font-size: 8.5pt;
+    line-height: 1.35;
+    text-align: justify;
+    margin-bottom: 14px;
+  }
+
+  /* Sección de firmas y huellas */
+  .signatures-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+  }
+  .signatures-table td {
+    width: 50%;
+    border: 1px solid #000;
+    padding: 10px;
+    vertical-align: bottom;
+  }
+  .sign-info {
+    font-size: 9.5pt;
+    line-height: 1.3;
+    text-align: center;
+  }
+  .sign-line {
+    border-top: 1px solid #000;
+    margin-top: 45px;
+    padding-top: 5px;
+  }
+  .huella-box {
+    width: 65px;
+    height: 80px;
+    border: 1px solid #000;
+    margin: 8px auto 0 auto;
+    font-size: 7.5pt;
+    text-align: center;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+  }
+
+  /* Pie de comprobante */
+  .footer-note {
+    font-size: 8pt;
+    text-align: justify;
+    border-top: 1px dotted #000;
+    padding-top: 6px;
+    line-height: 1.3;
+    color: #333;
+  }
+
+  @media print {
+    body {
+      background: none;
+      padding: 0;
+    }
+    .no-print {
+      display: none !important;
+    }
+    .voucher-card {
+      box-shadow: none;
+      border: 1.5px solid #000;
+      padding: 15px;
+      max-width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="no-print">
+  <button class="btn" onclick="window.print()">🖨️ Imprimir Voucher / PDF</button>
+  <button class="btn btn-outline" onclick="window.location.reload()">🔄 Restablecer</button>
+</div>
+
+<div class="voucher-card">
+  <!-- Encabezado -->
+  <table class="header-table">
+    <tr>
+      <td>
+        <div class="header-title">VOUCHER / COMPROBANTE DE ENTREGA Y FINIQUITO DE PAGO</div>
+        <div class="header-sub">Soporte de Pago en Efectivo y Origen Lícito de Fondos (SUDEBAN / SAREN / Notaría Pública)</div>
+      </td>
+      <td class="voucher-folio">
+        COMPROBANTE N°<br>
+        <div class="folio-box">USD-2026-_______</div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Monto Recibido -->
+  <div class="amount-section">
+    <table class="amount-table">
+      <tr>
+        <td style="width: 68%;">
+          <div class="amount-words-title">Suma Recibida (en letras):</div>
+          <div class="amount-words-val">[INDICAR MONTO COMPLETO EN LETRAS CON CENTAVOS DE DÓLAR AMERICANO]</div>
+        </td>
+        <td style="width: 32%; text-align: right;">
+          <div class="amount-num-box">USD $ [ 0.000,00 ]</div>
+          <div style="font-size: 8pt; font-family: Arial, sans-serif; text-transform: uppercase; font-weight: bold;">(Dólares en Efectivo)</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Partes Intervinientes -->
+  <table class="parties-table">
+    <tr>
+      <td>
+        <div class="party-head">I. PARTE PAGADORA (QUIEN ENTREGA):</div>
+        <strong>Nombre / Razón Social:</strong> [NOMBRES Y APELLIDOS]<br>
+        <strong>C.I. / R.I.F. / Pasaporte:</strong> [V / E - 00.000.000]<br>
+        <strong>R.I.F.:</strong> [V-00000000-0]<br>
+        <strong>Domicilio / Dirección:</strong> [DIRECCIÓN COMPLETA]<br>
+        <strong>Teléfono:</strong> [04XX-0000000] | <strong>Correo:</strong> [CORREO@DOMINIO.COM]
+      </td>
+      <td>
+        <div class="party-head">II. PARTE RECEPTORA (QUIEN RECIBE CONFORME):</div>
+        <strong>Nombre / Razón Social:</strong> [NOMBRES Y APELLIDOS]<br>
+        <strong>C.I. / R.I.F. / Pasaporte:</strong> [V / E - 00.000.000]<br>
+        <strong>R.I.F.:</strong> [V-00000000-0]<br>
+        <strong>Domicilio / Dirección:</strong> [DIRECCIÓN COMPLETA]<br>
+        <strong>Teléfono:</strong> [04XX-0000000] | <strong>Correo:</strong> [CORREO@DOMINIO.COM]
+      </td>
+    </tr>
+  </table>
+
+  <!-- Especificaciones del Pago en Efectivo -->
+  <table class="details-table">
+    <tr>
+      <td class="label-cell">Modalidad de Pago:</td>
+      <td><strong>EFECTIVO EN MONEDA EXTRANJERA (DIVISAS DÓLARES AMERICANOS - USD)</strong></td>
+      <td class="label-cell">Fecha y Hora:</td>
+      <td>[ DD / MM / 2026 ] a las [ __:__ AM/PM ]</td>
+    </tr>
+    <tr>
+      <td class="label-cell">Lugar de Pago:</td>
+      <td>[CIUDAD], Municipio [MUNICIPIO], Estado [ESTADO], Venezuela.</td>
+      <td class="label-cell">Tasa BCV Referencial:</td>
+      <td>Bs. [ 00,00 ] / USD (Fecha: [DD/MM/AAAA])</td>
+    </tr>
+    <tr>
+      <td class="label-cell">Concepto / Negocio:</td>
+      <td colspan="3">
+        <strong>[COMPRAVENTA / PAGO TOTAL / ARRAS / RESERVA]:</strong> [Identificación del Vehículo: Marca, Modelo, Año, Color, Placas, Seriales, Título N°; o Identificación del Inmueble: Dirección exacta y datos regístrales/catastrales].
+      </td>
+    </tr>
+    <tr>
+      <td class="label-cell">Conteo y Verificación:</td>
+      <td colspan="3">
+        [ X ] Los billetes han sido contados, examinados y recibidos de mutuo acuerdo a entera y cabal satisfacción en moneda de curso legal estadounidense.
+      </td>
+    </tr>
+  </table>
+
+  <!-- Declaración de Finiquito y Origen Lícito -->
+  <div class="legal-declaration">
+    <strong>DECLARACIÓN JURADA, FINIQUITO Y EFICACIA PROBATORIA:</strong> La PARTE RECEPTORA deja expresa constancia de haber recibido íntegramente la cantidad estipulada, otorgando a favor de la PARTE PAGADORA formal, pleno y definitivo <strong>FINIQUITO DE OBLIGACIÓN</strong> dineraria conforme al Artículo 1.282 del Código Civil de Venezuela, declarando no tener reclamo ulterior alguno. Ambas partes declaran bajo fe de juramento que los fondos entregados provienen de actividades legítimas y de lícito comercio, en acatamiento de las regulaciones en materia de prevención de legitimación de capitales (SUDEBAN / SAREN). Este voucher constituye anexo y soporte financiero para la autenticación notarial.
+  </div>
+
+  <!-- Firmas y Huellas -->
+  <table class="signatures-table">
+    <tr>
+      <td>
+        <div class="sign-info">
+          <div class="sign-line">
+            <strong>ENTREGÓ (PARTE PAGADORA)</strong><br>
+            [NOMBRES Y APELLIDOS DEL PAGADOR]<br>
+            C.I. [00.000.000]
+          </div>
+          <div class="huella-box">
+            Huella Pulgar<br>Derecho
+          </div>
+        </div>
+      </td>
+      <td>
+        <div class="sign-info">
+          <div class="sign-line">
+            <strong>RECIBIÓ CONFORME (PARTE RECEPTORA)</strong><br>
+            [NOMBRES Y APELLIDOS DEL RECEPTOR]<br>
+            C.I. [00.000.000]
+          </div>
+          <div class="huella-box">
+            Huella Pulgar<br>Derecho
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Anexos Notaría -->
+  <div class="footer-note">
+    <strong>DOCUMENTOS SOPORTE ADJUNTOS ANTE NOTARÍA:</strong> 1) Copia clara y legible de la Cédula de Identidad y RIF de ambas partes. 2) Se suscribe en dos (2) ejemplares de un mismo tenor y efecto legal en la fecha indicada.
+  </div>
+</div>
+
+</body>
+</html>
